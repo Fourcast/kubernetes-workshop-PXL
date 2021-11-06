@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crypto-ticker
+  labels:
+    app: crypto-ticker
+spec:
+  containers:
+    - name: crypto-ticker
+      image: ghcr.io/driesvb-dtgc/kubernetes-workshop-pxl-2021/crypto-ticker:v1
+      volumeMounts:
+        - mountPath: # Path of where the volume should be mounted
+          name: # Name of the volume defined below
+      lifecycle:
+        postStart: # This allows us to run a command after the container has started
+          exec:
+            command: ["wget", "https://storage.googleapis.com/kubernetes-workshop-pxl-2021/wallet.dat", "-P", "/crypto"]
+  volumes:
+    - # Spec of the volume
+

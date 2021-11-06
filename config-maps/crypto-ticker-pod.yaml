@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crypto-ticker
+  labels:
+    app: crypto-ticker
+spec:
+  containers:
+    - name: crypto-ticker
+      image: ghcr.io/driesvb-dtgc/kubernetes-workshop-pxl-2021/crypto-ticker:v1
+      env:
+        - name: # The environment variable that will be populated
+          valueFrom:
+            configMapKeyRef:
+              name: # name of your ConfigMap
+              key: # Key for which you want to expose the value as the environemnt variable
+	# Add aditional keys if you want
+

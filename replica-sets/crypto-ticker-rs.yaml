@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: <???>
+metadata:
+  name: <???>
+  labels:
+    version: v1
+    app: crypto-ticker
+spec:
+  replicas: <???>
+  selector:
+    matchLabels:
+      app: crypto-ticker
+      version: v1
+  template:
+    <your Pod YAML without the apiVersion and kind attributes>
+

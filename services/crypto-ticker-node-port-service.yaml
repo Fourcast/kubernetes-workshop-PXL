@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crypto-ticker-node-port-service
+spec:
+  type: <???>
+  selector:
+    app: crypto-ticker
+  ports:
+    - port: <???>
+      targetPort: <???>
+      nodePort: <???>

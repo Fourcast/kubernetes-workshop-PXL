@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crypto-ticker-config-map
+data:
+  # Add some key-value pairs, e.g. "environment: develop"
+  <???>
