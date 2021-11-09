@@ -77,7 +77,7 @@ As a first step, let's deploy the `crypto-ticker` application (v1) as a single-c
 
   - In the application, browse to "System control" and click the "crash application (container)" button. This will make the container exit with a non-successful code (-1). Keep an eye on the watch. What happens? Is the container recreated? What Kubernetes entity is responsible for this?
 
-    This already demonstrates some self-healing capabilities of Kubernetes, even from a simple object such as a Pod.
+    This already demonstrates some self-healing capabilities of Kubernetes, even from a simple object suchad as a Pod.
 
   - In essence, a Pod is still running (at least one) containers. We can get a shell in a container with `kubectl exec --stdin --tty <pod name> -- sh`. Try this out for the `crypto-ticker` pod. Explore the file system for a bit (e.g. use `ls` to list the files). Can you see the application files? Notice that this file system is completely isolated and unaware from your local file system.
     You can exit the shell with `CTRL+C`
@@ -90,7 +90,7 @@ As a first step, let's deploy the `crypto-ticker` application (v1) as a single-c
 
 Pods are the foundation of a Kubernetes deployment. However, what if a single pod can't handle the load? Do we start new pods with `kubectl run` if our traffic increases, and delete them again if it decreases? What if a pod crashes, do we restart it ourselves? It's a job no-one wants to do manually.
 
-Manually managing pods is clearly tedious work. Fortunately, we can let Kubernetes do it for us using ReplicaSets. A *ReplicaSet* is a *controller* that takes a Pod specification as a template and makes sure a certain number of pods are running at all times, no matter what happens to them individually. The controller will continuously check whether the requested amount of replicas is running successfuly, and if not add or remove individual Pods. Remark that a ReplicaSet *does not* have an IP and does not expose an entry point load balancing traffic over the Pods it controls. It simply oberves the Pods and adds or removes them as needed.
+Manually managing pods is clearly tedious work. Fortunately, we can let Kubernetes do it for us using ReplicaSets. A *ReplicaSet* is a *controller* that takes a Pod specification as a template and makes sure a certain number of pods are running at all times, no matter what happens to them individually. The controller will continuously check whether the requested amount of replicas is running successfuly, and if not add or remove individual Pods. Remark that a ReplicaSet *does not* have an IP and does not expose an entry point load balancing traffic over the Pods it controls. It simply observes the Pods and adds or removes them as needed.
 
 In practice you rarely directly use ReplicaSets and use Deployments as it has some additional capabilities. However it's useful to experiment with them to understand how a Deployment works later.
 
@@ -180,7 +180,7 @@ A NodePort Service exposes a group of Pods by opening a static port on *each* of
 **Exercises**
 
 1) Deploy a NodePort Service `crypto-ticker-node-port-service` starting from the template in `/repo/services/crypto-ticker-node-port-service.yaml`. Make sure the opened nodeport on each node is `30050`.
-2) List the nodes and their internal IP addressess with `kubectl get nodes -o wide` . There will only be one node on Minikube. However, in practice there will be many nodes with each their own internal IP address. They will each have `30050` port open due to this NodePort Service so you could pick any node IP to reach a targeted Pod.
+2) List the nodes and their internal IP addresses with `kubectl get nodes -o wide` . There will only be one node on Minikube. However, in practice there will be many nodes with each their own internal IP address. They will each have `30050` port open due to this NodePort Service so you could pick any node IP to reach a targeted Pod.
 3) Browse to `http://<internal node IP>:30050`. Can you reach the application?
 4) **Keep this service running, we will need it later**
 
@@ -190,7 +190,7 @@ With exposing the group of Pods on a port of each of the nodes, the set of IP ad
 
 ### LoadBalancer
 
-Queue in LoadBalancer Services. This type of Service will typically be implemented by a cloud provider such as Google Cloud Platform (e.g. an external HTTPS load balancer). By default a LoadBalancer will use a NodePort service in the backgroud and maintain the list of node IP addresses for us, exposing a single external IP address through which the application can be reached.
+Queue in LoadBalancer Services. This type of Service will typically be implemented by a cloud provider such as Google Cloud Platform (e.g. an external HTTPS load balancer). By default a LoadBalancer will use a NodePort service in the background and maintain the list of node IP addresses for us, exposing a single external IP address through which the application can be reached.
 
 
 **Exercises**
@@ -205,7 +205,7 @@ Awesome! Our application is now fully accessible to our users! With Bitcoin skyr
 
 Think about how we will deploy this new version on Kubernetes. A straightforward approach is changing the tag of the container to the new version in the ReplicaSet specification and redeploying it. However, this will first terminate all the existing pods and then spin up the Pods with the new version, possibly leaving no Pods running to serve incoming requests, leaving the application temporarily inaccessible to the users. In many systems today this is unacceptable.
 
-To automate a more gradual update rollout, ensuring availability in the meanwhile, *Deployments* provide the magic we need. Deployments are yet another controller managing ReplicaSets to facilitate rolling updates of our application from one version to another, keeping a healthy amount of Pods available during the process. Upon an update, the Deployment will create an empty new ReplicaSet for the Pods running the updated version, step-by-step scale down the old ReplicaSet and scale up the new ReplicaSet, always ensuring Pods are available to serve traffic. In its default strategy configuration, this is called a **rolling update**. Parameters like `maxSurge` and `maxUnavailable` determine by how many Pods the ReplicaSet is allowed to deviate from its replication setting. As the ReplicaSets scale down and up, different users might temporarely reach different versions of the application depending to which Pod they are forwarded too by e.g. a service that is targeting the application Pods.
+To automate a more gradual update rollout, ensuring availability in the meanwhile, *Deployments* provide the magic we need. Deployments are yet another controller managing ReplicaSets to facilitate rolling updates of our application from one version to another, keeping a healthy amount of Pods available during the process. Upon an update, the Deployment will create an empty new ReplicaSet for the Pods running the updated version, step-by-step scale down the old ReplicaSet and scale up the new ReplicaSet, always ensuring Pods are available to serve traffic. In its default strategy configuration, this is called a **rolling update**. Parameters like `maxSurge` and `maxUnavailable` determine by how many Pods the ReplicaSet is allowed to deviate from its replication setting. As the ReplicaSets scale down and up, different users might temporarily reach different versions of the application depending to which Pod they are forwarded too by e.g. a service that is targeting the application Pods.
 
 During deployments it's also possible to pause or roll back to  in case you notice the new version is causing issues. Even after a complete deployment it is possible to roll back to previous revisions with simple commands.
 
@@ -235,7 +235,7 @@ Note: In real-world systems, a Deployment is usually preferred to manage a Repli
 
 ### Volumes
 
-When containers run in the same pod, they can share the same file system volumes. The type of these volumes  and where they are mounted inside the containers is specified on the container level in the Pod specification. Some volume types provide persistent storage (i.e. storage that is persisted even upon a Pod crashing) while others provide ephemeril storage (i.e. storage that is wiped clean upon termination of the Pod). Persistent storage is often backed by a virtual drive on a cloud provider (e.g. Persistent Disk on GCP)  or by a more traditional file system (e.g. an implementation of NFS) so that it remains intact even if containers mounting it are destroyed and nodes are being shut down. Luckily all of this is abstracted away for the containers and application developers. From the point of view of the container, it is simply a directory or file mounted in its local file system, no matter where it actually resides.
+When containers run in the same pod, they can share the same file system volumes. The type of these volumes  and where they are mounted inside the containers is specified on the container level in the Pod specification. Some volume types provide persistent storage (i.e. storage that is persisted even upon a Pod crashing) while others provide ephemeral storage (i.e. storage that is wiped clean upon termination of the Pod). Persistent storage is often backed by a virtual drive on a cloud provider (e.g. Persistent Disk on GCP)  or by a more traditional file system (e.g. an implementation of NFS) so that it remains intact even if containers mounting it are destroyed and nodes are being shut down. Luckily all of this is abstracted away for the containers and application developers. From the point of view of the container, it is simply a directory or file mounted in its local file system, no matter where it actually resides.
 
 For the exercises we'll limit us to mounting a single file in the containers of our `crypto-ticker` Pods.
 
@@ -245,7 +245,7 @@ For the exercises we'll limit us to mounting a single file in the containers of 
 We will be first mounting a EmptyDir volume in the container of our `crypto-ticker` Pods. This type of volume is created and mounted when a Pod is started on a node and is initially empty. We will then be creating a file with our private Bitcoin key in that directory. 
 
 1) Make sure at least one `crypto-ticker` Pod is up (e.g. using a single Pod deployment) and you are able to access the app from your browser (e.g. using `kubectl port-forward`).
-2) Go to the "File system" page of the application. This page is looking for a file `/crytpo/wallet.dat` on the file system of the container. If it is found, the contents will be displayed. 
+2) Go to the "File system" page of the application. This page is looking for a file `/crypto/wallet.dat` on the file system of the container. If it is found, the contents will be displayed. 
 
 To provide the file we will be first creating an EmptyDir volume and mount it as `/crypto` in the container's file system. We will also add a start script to the Pod specification that is executed when the container is started that downloads our `wallet.dat` file from Google Cloud Storage (https://storage.googleapis.com/kubernetes-workshop-pxl-2021/wallet.dat) in the correct `/crypto` directory.
 
@@ -297,9 +297,23 @@ Note: ConfigMaps are not fit to store secrets such as API keys or passwords. A m
 
 
 
+## Advanced exercises
 
+A *canary deployment* is a deployment pattern where a new version rollout of an application is only exposed to a small percentage of users (e.g. 5% of the traffic goes to the Pods running the new version while 95% still goes to the old version). If something is wrong with the new version, engineers can notice this due to monitoring and logging while only a small number of users is impacted. They can then roll back by sending all traffic to the old version.
 
+1)
 
+In this exercise, have 2 Deployments (one for version 1 and one of version 2). Make sure there is a single NodePort service exposing the application and configure the Deployments in a way that the initial v1/v2 traffic split is 100%/0%, then 80%/100% and then 0%/100% (you can manually redeploy the Deployment configuration(s) for each scenario). Only use native Kubernetes structures.
+
+Additionally, make sure that there is an environment variable `TRAFFIC_SPLIT` exposed to the Pods with the value equal to the split of that version, i.e. if a Pod is running version 1 in the second scenario, the value of the environment variable will be 80%. Also, make sure there is a file `/ops/canary-split.txt` mounted in each container with the contents being the same as the environment variable (i.e. the traffic split for that specific Pod).
+
+2)
+
+If some of you reached this exercise, let your host know and he will first give a short explanation about the Ingress controller
+
+*Ingress* is a type of object that can work in front of services and forward traffic based on application-level (i.e. HTTP request) introspection and matching. For example, with an Ingress controller it is possible to have a single domain and IP (e.g. crypto-ticker.local) and configure it so that if a user browses to crypto-ticker.local/v1/, the request is redirected to the v1 service, while if the user browses to crypto-ticker.local/v2/, the request is redirected to the v2 service. In this exercise, try to do exactly that. Create two deployments and two NodePort services, for v1 and v2 respectively. Then, add an Ingress controller that redirects request to the /v1/ path to the v1 service and requests to the /v2/ path to the v2 service. 
+
+Hint: you can add local domain name - IP mappings in the `/etc/hosts` file.
 
 
 
