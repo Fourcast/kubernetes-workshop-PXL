@@ -8,8 +8,8 @@ In this Kubernetes workshop we'll be looking at how we can isolate our applicati
 
 To situate the exercises in a more real-world scenario, we'll be using an example application `crypto-ticker`. It's a simple 1-tier Node application (EJS + Express) with two versions:
 
-- Version 1 shows the latest Bitcoin price
-- Version 2 shows the latest Bitcoin and Ethereum price
+- Version 1 shows the latest Bitcoin price (ghcr.io/driesvb-dtgc/kubernetes-workshop-pxl-2021/crypto-ticker:v1)
+- Version 2 shows the latest Bitcoin and Ethereum price (ghcr.io/driesvb-dtgc/kubernetes-workshop-pxl-2021/crypto-ticker:v2)
 
 Both versions have extra functionality to observe some Kubernetes features that we'll be exploring. Containerized versions are already available to you on the Packages section of this [GitHub repository](https://github.com/driesvb-dtgc/kubernetes-workshop-pxl-2021/pkgs/container/kubernetes-workshop-pxl-2021%2Fcrypto-ticker). When running the container, the application is exposed on port 3000.
 
