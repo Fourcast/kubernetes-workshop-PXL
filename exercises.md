@@ -315,7 +315,8 @@ If some of you reached this exercise, let your host know and he will first give 
 
 Hint: you can add local domain name - IP mappings in the `/etc/hosts` file.
 
-
+## Feedback
+Please provide some anonymous feedback using this form: https://forms.gle/zKhvDXnFk2FmKYEi6
 
 
 
