@@ -126,7 +126,7 @@ Note: You also have a Vertical Pod Autoscaler, that instead of adding/removing P
 **Note:** Minikube can experience issues with HPA because of a faulty metric service. It's possible that it won't work for your installation.
 
 1) Deploy a HPA for the `crypto-ticker-rs` ReplicaSet scaling at a CPU utilization rate of 60% with a minimum of 1 pod and a maximum of 3 pods (you can use a `kubectl` command for this instead of a YAML spec)
-   `kubectl autoscale rc crypto-ticker-fs --min=<min amount of Pods> --max=<max amount of Pods> --cpu-percent=<percentage>`
+   `kubectl autoscale rs crypto-ticker-fs --min=<min amount of Pods> --max=<max amount of Pods> --cpu-percent=<percentage>`
 
 2) How many pods are running? 
 
